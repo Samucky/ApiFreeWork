@@ -1,40 +1,16 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Prueba</title>
-    <link rel="stylesheet" href="pagina de inicio/styles.css">
+    <title>Freelancers</title>
+    <script defer src="app.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-
-<header>
-    <h1>Bienvenido a mi Página de Prueba</h1>
-</header>
-
-<main>
-    <h2>Sección Principal</h2>
-    <p>Este es un párrafo de ejemplo para mostrar el contenido de la página. Puedes modificar este texto según tus necesidades.</p>
-    
-    <h3>Lista de Ejemplo</h3>
-    <ul>
-        <li>Elemento 1</li>
-        <li>Elemento 2</li>
-        <li>Elemento 3</li>
-    </ul>
-    
-    <h3>Formulario de Ejemplo</h3>
-    <form id="myForm">
-        <label for="nombre">Nombre:</label><br>
-        <input type="text" id="nombre" name="nombre"><br><br>
-        <input type="submit" value="Enviar">
-    </form>
-</main>
-
-<footer>
-    <p>&copy; 2024 Mi Página de Prueba</p>
-</footer>
-
-<script src="pagina de inicio/script.js"></script>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-5">
+        <h1 class="text-3xl font-bold mb-5">Freelancers</h1>
+        <div id="freelancer-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </div>
 </body>
 </html>
