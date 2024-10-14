@@ -9,7 +9,7 @@ import authController from './controllers/authControllers.js';
 const app = express();
 
 const corsOptions = {
-   origin: '*', 
+   origin: '100.20.92.101', 
    optionsSuccessStatus: 204 
 };
 
