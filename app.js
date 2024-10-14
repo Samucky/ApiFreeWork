@@ -18,16 +18,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
-app.use((req, res, next) => {
-    console.log('Se recibió una solicitud');
-    next();
-  });
-app.use((err,  res, next) => {
-    console.error(err.stack);
-    res.status(500).send("Error Del Servidor");
-    next();
-  });
-  
+
 
 // Usa la ruta '/api' para las rutas de autenticación
 app.use('/api/auth', authController);  // Cambiado a /api/auth
