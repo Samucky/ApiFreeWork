@@ -7,11 +7,19 @@ import empresasController from './controllers/empresaController.js';
 import authController from './controllers/authControllers.js'; 
 
 const app = express();
+const allowedOrigins = ['100.20.92.101'];
 
 const corsOptions = {
-   origin: '100.20.92.101', 
-   optionsSuccessStatus: 204 
+    origin: function (origin, callback) {
+        if (allowedOrigins.includes(origin)) {
+          callback(null, true);  // Permitir si el origen está en la lista
+        } else {
+          callback(new Error('Acceso no permitido por CORS'));  // Bloquear si no está en la lista
+        }
+      },
+  optionsSuccessStatus: 204 // Estado para respuestas pre-flight (OPCIONAL)
 };
+
 
 app.use(cors(corsOptions));
 app.use(morgan('dev'));
