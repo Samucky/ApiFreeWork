@@ -8,7 +8,27 @@ const router = express.Router();
 
 // Todas las rutas protegidas con verifyToken
 
-// Obtener todos los freelancers
+/**
+ * @swagger
+ * /api/freelancers:
+ *   get:
+ *     summary: Obtener todos los freelancers
+ *     tags:
+ *       - Freelancers
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de todos los freelancers
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Freelancer'
+ *       500:
+ *         description: Error en el servidor
+ */
 router.get('/freelancers', verifyToken, async (req, res) => {
     try {
         const freelancers = await freelancerService.getAllFreelancers();
@@ -18,7 +38,50 @@ router.get('/freelancers', verifyToken, async (req, res) => {
     }
 });
 
-// Crear un nuevo freelancer
+/**
+ * @swagger
+ * /api/freelancers:
+ *   post:
+ *     summary: Crear un nuevo freelancer
+ *     tags:
+ *       - Freelancers
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *                 example: Juan Pérez
+ *               edad:
+ *                 type: integer
+ *                 example: 30
+ *               carrera:
+ *                 type: string
+ *                 example: Ingeniero en Software
+ *               años_de_experiencia:
+ *                 type: integer
+ *                 example: 5
+ *               habilidades:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["JavaScript", "Node.js"]
+ *               tarifa_por_hora:
+ *                 type: number
+ *                 example: 25
+ *     responses:
+ *       201:
+ *         description: Freelancer creado exitosamente
+ *       400:
+ *         description: Error de validación
+ *       500:
+ *         description: Error en el servidor
+ */
 router.post('/freelancers', 
     verifyToken, 
     [
@@ -34,12 +97,10 @@ router.post('/freelancers',
         try {
             const { nombre, edad, carrera, años_de_experiencia, habilidades, tarifa_por_hora, proyectos_anteriores, disponibilidad, ubicacion, calificaciones_o_reseñas, certificaciones, idiomas } = req.body;
             
-            // Crea un nuevo freelancer
             const newFreelancer = new Freelancer(
                 nombre, edad, carrera, años_de_experiencia, habilidades, tarifa_por_hora, proyectos_anteriores, disponibilidad, ubicacion, calificaciones_o_reseñas, certificaciones, idiomas
             );
 
-            // Llama al servicio para agregar el freelancer
             const addedFreelancer = await freelancerService.addFreelancer(newFreelancer);
 
             res.status(201).json(addedFreelancer);
@@ -49,7 +110,36 @@ router.post('/freelancers',
     }
 );
 
-// Actualizar un freelancer por ID
+/**
+ * @swagger
+ * /api/freelancers/{id}:
+ *   put:
+ *     summary: Actualizar un freelancer por ID
+ *     tags:
+ *       - Freelancers
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del freelancer a actualizar
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Freelancer'
+ *     responses:
+ *       200:
+ *         description: Freelancer actualizado exitosamente
+ *       404:
+ *         description: Freelancer no encontrado
+ *       500:
+ *         description: Error en el servidor
+ */
 router.put("/freelancers/:id", verifyToken, async (req, res) => {
     try {
         const updatedFreelancer = await freelancerService.updateFreelancer(req.params.id, req.body);
@@ -59,7 +149,30 @@ router.put("/freelancers/:id", verifyToken, async (req, res) => {
     }
 });
 
-// Eliminar un freelancer por nombre
+/**
+ * @swagger
+ * /api/freelancers/nombre/{nombre}:
+ *   delete:
+ *     summary: Eliminar un freelancer por nombre
+ *     tags:
+ *       - Freelancers
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: nombre
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Nombre del freelancer a eliminar
+ *     responses:
+ *       200:
+ *         description: Freelancer eliminado exitosamente
+ *       404:
+ *         description: Freelancer no encontrado
+ *       500:
+ *         description: Error en el servidor
+ */
 router.delete('/freelancers/nombre/:nombre', verifyToken, async (req, res) => {
     try {
         const result = await freelancerService.deleteFreelancer(req.params.nombre);
@@ -69,7 +182,30 @@ router.delete('/freelancers/nombre/:nombre', verifyToken, async (req, res) => {
     }
 });
 
-// Buscar freelancers por carrera
+/**
+ * @swagger
+ * /api/freelancers/carrera/{carrera}:
+ *   get:
+ *     summary: Buscar freelancers por carrera
+ *     tags:
+ *       - Freelancers
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: carrera
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Carrera del freelancer
+ *     responses:
+ *       200:
+ *         description: Lista de freelancers por carrera
+ *       404:
+ *         description: No se encontraron freelancers con esa carrera
+ *       500:
+ *         description: Error en el servidor
+ */
 router.get('/freelancers/carrera/:carrera', verifyToken, async (req, res) => {
     try {
         const freelancers = await freelancerService.findFreelancersByCareer(req.params.carrera);
