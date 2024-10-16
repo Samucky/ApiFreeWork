@@ -10,25 +10,10 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 const app = express();
 
-const allowedOrigins = [
-  'http://100.20.92.101',
-  'http://44.225.181.72',
-  'http://44.227.217.144'
-];
-
+// Configuración de CORS
 const corsOptions = {
-  origin: function (origin, callback) {
-      // Si el origen es undefined (por ejemplo, cuando se accede desde herramientas de desarrollo), permitir
-      if (!origin) return callback(null, true);
-      
-      // Verificar si el origen está en la lista de permitidos
-      if (allowedOrigins.includes(origin)) {
-          callback(null, true);
-      } else {
-          callback(new Error('Acceso denegado por CORS')); // Denegar si no está permitido
-      }
-  },
-  optionsSuccessStatus: 204 // Para navegadores que requieren un estado 204 para las solicitudes pre-flight
+  origin: '*', // Permite todas las solicitudes
+  optionsSuccessStatus: 204
 };
 
 app.use(cors(corsOptions));
