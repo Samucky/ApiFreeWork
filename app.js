@@ -1,19 +1,30 @@
 import express from 'express';
-import morgan from 'morgan';
-import bodyParser from 'body-parser';
 import cors from 'cors';
+import morgan from 'morgan'; 
+import bodyParser from 'body-parser'; 
 import freelancersController from './controllers/FreelancersController.js';
-import empresasController from './controllers/empresaController.js';
-import authController from './controllers/authControllers.js';
-import swaggerUi from 'swagger-ui-express';
-import swaggerJsdoc from 'swagger-jsdoc';
+import empresasController from './controllers/empresaController.js'; 
+import authController from './controllers/authControllers.js'; 
+import dotenv from 'dotenv'; // Importa dotenv
+
+dotenv.config(); // Carga las variables de entorno
 
 const app = express();
 
-// Configuración de CORS
+// Usa las variables de entorno
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(','); // Divide las URLs por comas
+
 const corsOptions = {
-  origin: '*', // Permite todas las solicitudes
-  optionsSuccessStatus: 204
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Acceso denegado por CORS'));
+        }
+    },
+    optionsSuccessStatus: 204
 };
 
 app.use(cors(corsOptions));
@@ -22,37 +33,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// Configuración de Swagger
-const swaggerOptions = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'API de Freelancers y Empresas',
-            version: '1.0.0',
-            description: 'API para gestionar freelancers y empresas'
-        },
-        servers: [
-            {
-                url: 'http://localhost:3001/api',
-                description: 'Servidor local'
-            }
-        ]
-    },
-    apis: ['./controllers/*.js'], // Aquí especificas dónde Swagger buscará los comentarios de las rutas
-};
-
-const swaggerSpecs = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
-
-// Rutas de autenticación
+// Rutas de tu aplicación
 app.use('/api/auth', authController);
-
-// Rutas de freelancers y empresas
 app.use('/api/freelancers', freelancersController);
 app.use('/api/empresas', empresasController);
 
-// Puerto de escucha
-const PORT = 3001;
+const PORT = process.env.PORT || 3001; // Usa la variable de entorno o un valor por defecto
 app.listen(PORT, () => {
-    console.log(`YA no lo muevas porque corriendo en el puerto: ${PORT}`);
+    console.log(`Servidor corriendo en el puerto: ${PORT}`);
 });
